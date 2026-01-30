@@ -1,4 +1,7 @@
 package br.com.alura.reservaSalas.repository;
 
-public interface ReservaRepository {
+import br.com.alura.reservaSalas.model.Reserva;
+import org.springframework.data.jpa.repository.JpaRepository;
+
+public interface ReservaRepository extends JpaRepository<Reserva, Long> {
 }
