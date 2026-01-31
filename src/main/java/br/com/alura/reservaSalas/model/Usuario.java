@@ -1,5 +1,7 @@
 package br.com.alura.reservaSalas.model;
 
+import br.com.alura.reservaSalas.dto.AtualizarUsuarioDTO;
+import br.com.alura.reservaSalas.dto.CadastrarUsuarioDTO;
 import jakarta.persistence.*;
 
 import java.util.List;
@@ -19,10 +21,14 @@ public class Usuario {
     @OneToMany(mappedBy = "usuario")
     private List<Reserva> reservas;
 
-    public Usuario(Long id, String nome, String email) {
-        this.id = id;
-        this.nome = nome;
-        this.email = email;
+    public Usuario(CadastrarUsuarioDTO dto) {
+        this.nome = dto.nome();
+        this.email = dto.email();
+    }
+
+    public void atualizarUsuario(AtualizarUsuarioDTO dto){
+        this.nome = dto.nome();
+        this.email = dto.email();
     }
 
     public Usuario() {}

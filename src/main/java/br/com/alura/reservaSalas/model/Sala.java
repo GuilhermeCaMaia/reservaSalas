@@ -1,6 +1,9 @@
 package br.com.alura.reservaSalas.model;
 
+import br.com.alura.reservaSalas.dto.AtualizarSalaDTO;
+import br.com.alura.reservaSalas.dto.CadastrarSalaDTO;
 import jakarta.persistence.*;
+import org.antlr.v4.runtime.misc.NotNull;
 
 import java.util.List;
 
@@ -12,26 +15,38 @@ public class Sala {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    @NotNull
     private String numero;
-
-    private int capacidade;
-
+    @NotNull
+    private Integer capacidade;
+    @NotNull
     private boolean salaInativa;
 
     @OneToMany(mappedBy = "sala")
     private List<Reserva> reservas;
 
-    public Sala(Long id, String numero, int capacidade, boolean salaInativa) {
-        if (salaInativa == true){
+    public Sala(CadastrarSalaDTO dto) {
+        if (dto.salaInativa() == true){
             System.out.println("Sala inativa!");
         }
-        if (capacidade <= 0){
-            System.out.println("Capacidade invalida! \n a capacidade deve ser positivo");
-            return;
+        if (dto.capacidade() <= 0){
+            throw new IllegalArgumentException("Capacidade invalida! \n a capacidade deve ser positivo");
         }
-        this.id = id;
-        this.numero = numero;
-        this.capacidade = capacidade;
+        this.numero = dto.numero();
+        this.capacidade = dto.capacidade();
+        this.salaInativa = dto.salaInativa();
+    }
+
+    public void atualizarDados(AtualizarSalaDTO dto) {
+        if (dto.salaInativa() == true){
+            System.out.println("Sala inativa!");
+        }
+        if (dto.capacidade() <= 0){
+            throw new IllegalArgumentException("Capacidade invalida! \n a capacidade deve ser positivo");
+        }
+        this.numero = dto.numero();
+        this.capacidade = dto.capacidade();
+        this.salaInativa = dto.salaInativa();
     }
 
     public Sala() {}

@@ -1,5 +1,7 @@
 package br.com.alura.reservaSalas.service;
 
+import br.com.alura.reservaSalas.dto.CriarReservaDTO;
+import br.com.alura.reservaSalas.dto.ReservaDTO;
 import br.com.alura.reservaSalas.model.Reserva;
 import br.com.alura.reservaSalas.model.Sala;
 import br.com.alura.reservaSalas.model.Usuario;
@@ -9,6 +11,7 @@ import br.com.alura.reservaSalas.repository.UsuarioRepository;
 import jakarta.persistence.EntityNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.Optional;
@@ -24,34 +27,39 @@ public class ReservaService {
     private UsuarioRepository usuarioRepository;
 
     // Criar
-    public void criarReserva(Reserva reserva, Long idSala, String emailUsuario){
-        Sala sala = salaRepository.findById(idSala)
+    public void criarReserva(CriarReservaDTO dto){
+        Sala sala = salaRepository.findById(dto.idSala())
                 .orElseThrow(()-> new RuntimeException("Sala não encontrada"));
-        Usuario usuario = usuarioRepository.findByEmail(emailUsuario)
+        Usuario usuario = usuarioRepository.findById(dto.idUsuario())
                 .orElseThrow(() -> new RuntimeException("Usuário não encontrado"));
 
-        reserva.setSala(sala);
-        reserva.setUsuario(usuario);
+        Reserva reserva = new Reserva(dto, sala, usuario);
         reservaRepository.save(reserva);
     }
 
     // Listar
-    public List<Reserva> listarReservas() {
-        return reservaRepository.findAll();
+    public List<ReservaDTO> listarReservas() {
+        return reservaRepository.findAll().stream()
+                .map(ReservaDTO::new).toList();
     }
 
-    public Reserva buscarReservaPorId(Long id) {
+    public ReservaDTO buscarReservaPorId(Long id) {
         Reserva reserva = reservaRepository.findById(id)
                 .orElseThrow(()-> new RuntimeException("Reserva não encontrada"));
-        return reserva;
+        return new ReservaDTO(
+                reserva.getId(),
+                reserva.getDataInicio(),
+                reserva.getDataFim(),
+                reserva.getStatus(),
+                reserva.getSala(),
+                reserva.getUsuario()
+        );
     }
     // Atualizar
-    public void atualizarReserva(Long id, Reserva dados) {
-        Reserva reserva = reservaRepository.getReferenceById(id);
-        reserva.setDataInicio(dados.getDataInicio());
-        reserva.setDataFim(dados.getDataFim());
-        reserva.setStatus(dados.getStatus());
-        reservaRepository.save(reserva);
+    @Transactional
+    public void atualizarReserva(ReservaDTO dto) {
+        Reserva reserva = reservaRepository.getReferenceById(dto.id());
+        reserva.AtualizarReserva(dto);
     }
 
     // Deletar

@@ -1,5 +1,7 @@
 package br.com.alura.reservaSalas.model;
 
+import br.com.alura.reservaSalas.dto.CriarReservaDTO;
+import br.com.alura.reservaSalas.dto.ReservaDTO;
 import jakarta.persistence.*;
 
 import java.time.LocalDate;
@@ -26,21 +28,34 @@ public class Reserva {
     @Enumerated(EnumType.STRING)
     private StatusReserva status;
 
-    public Reserva(Long id, LocalDate dataInicio, LocalDate dataFim, Sala sala, Usuario usuario, StatusReserva status) {
-        if (dataInicio == null) {
+    public Reserva(CriarReservaDTO dto, Sala sala, Usuario usuario) {
+        if (dto.dataInicio() == null) {
             throw new IllegalArgumentException("informe a data de inicio");
-        } else if (dataFim == null) {
+        } else if (dto.dataFim() == null) {
             throw new IllegalArgumentException("informe a data de fim");
-        } else if(dataFim.isBefore(dataInicio)){
+        } else if(dto.dataFim().isBefore(dto.dataInicio())){
             throw new IllegalArgumentException("Data fim invalida! \n a data final deve ser depois da data inicio");
         }
 
-        this.id = id;
-        this.dataInicio = dataInicio;
-        this.dataFim = dataFim;
-        this.status = status;
+        this.dataInicio = dto.dataInicio();
+        this.dataFim = dto.dataFim();
+        this.status = dto.status();
         this.sala = sala;
         this.usuario = usuario;
+    }
+
+    public void AtualizarReserva(ReservaDTO dto){
+        if (dto.dataInicio() == null) {
+            throw new IllegalArgumentException("informe a data de inicio");
+        } else if (dto.dataFim() == null) {
+            throw new IllegalArgumentException("informe a data de fim");
+        } else if(dto.dataFim().isBefore(dto.dataInicio())){
+            throw new IllegalArgumentException("Data fim invalida! \n a data final deve ser depois da data inicio");
+        }
+
+        this.dataInicio = dto.dataInicio();
+        this.dataFim = dto.dataFim();
+        this.status = dto.status();
     }
 
     public Reserva() {}

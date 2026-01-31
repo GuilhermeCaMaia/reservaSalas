@@ -1,5 +1,8 @@
 package br.com.alura.reservaSalas.controller;
 
+import br.com.alura.reservaSalas.dto.AtualizarUsuarioDTO;
+import br.com.alura.reservaSalas.dto.CadastrarUsuarioDTO;
+import br.com.alura.reservaSalas.dto.UsuarioDTO;
 import br.com.alura.reservaSalas.model.Usuario;
 import br.com.alura.reservaSalas.service.UsuarioServece;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,25 +19,25 @@ public class UsuarioController {
 
     // Criar
     @PostMapping
-    public ResponseEntity<String> cadastrarUsuario(@RequestBody Usuario usuario) {
-        usuarioServece.cadastrarUsuario(usuario);
+    public ResponseEntity<String> cadastrarUsuario(@RequestBody CadastrarUsuarioDTO dto) {
+        usuarioServece.cadastrarUsuario(dto);
         return ResponseEntity.ok().build();
     }
     // Listar
     @GetMapping
-    public ResponseEntity<List<Usuario>> listarUsuarios(){
-        List<Usuario> usuarios = usuarioServece.listarUsuarios();
+    public ResponseEntity<List<UsuarioDTO>> listarUsuarios(){
+        List<UsuarioDTO> usuarios = usuarioServece.listarUsuarios();
         return ResponseEntity.ok().body(usuarios);
     }
     @GetMapping("/{id}")
-    public ResponseEntity<Usuario> listarUsuarioPorId(@PathVariable Long id){
-        var dados = usuarioServece.buscarSalaPorId(id);
-        return ResponseEntity.ok().body(dados);
+    public ResponseEntity<UsuarioDTO> listarUsuarioPorId(@PathVariable Long id){
+        UsuarioDTO dto = usuarioServece.buscarSalaPorId(id);
+        return ResponseEntity.ok().body(dto);
     }
     // Atualizar
-    @PutMapping("/{id}")
-    public ResponseEntity<String> atualizarUsuario(@RequestBody Usuario usuario, @PathVariable Long id){
-        usuarioServece.atualizarUsuario(id, usuario);
+    @PutMapping
+    public ResponseEntity<String> atualizarUsuario(@RequestBody AtualizarUsuarioDTO dto){
+        usuarioServece.atualizarUsuario(dto);
         return ResponseEntity.ok().build();
     }
     // Deletar

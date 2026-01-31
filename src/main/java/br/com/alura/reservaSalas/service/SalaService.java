@@ -1,13 +1,16 @@
 package br.com.alura.reservaSalas.service;
 
+import br.com.alura.reservaSalas.dto.AtualizarSalaDTO;
+import br.com.alura.reservaSalas.dto.CadastrarSalaDTO;
+import br.com.alura.reservaSalas.dto.SalaDTO;
 import br.com.alura.reservaSalas.model.Sala;
 import br.com.alura.reservaSalas.repository.SalaRepository;
 import jakarta.persistence.EntityNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
-import java.util.Optional;
 
 @Service
 public class SalaService {
@@ -16,27 +19,28 @@ public class SalaService {
     private SalaRepository salaRepository;
 
     // Criar
-    public void cadastarSala(Sala sala){
-        salaRepository.save(sala);
+    public void cadastarSala(CadastrarSalaDTO dto){
+        salaRepository.save(new Sala(dto));
     }
     // listar
-    public List<Sala> listarSalas(){
-        return salaRepository.findAll();
+    public List<SalaDTO> listarSalas(){
+        return salaRepository.findAll().stream().map(SalaDTO::new).toList();
     }
-    public Sala buscarSalaPorId(Long id){
-        Optional<Sala> sala = salaRepository.findById(id);
-        return sala.orElse(null);
+    public SalaDTO buscarSalaPorId(Long id){
+        Sala sala = salaRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Sala não encontrada"));
+        return new SalaDTO(
+                sala.getId(),
+                sala.getNumero(),
+                sala.getCapacidade(),
+                sala.isSalaInativa()
+        );
     }
     // Atualizar
-    public void atualizarSala(Long id, Sala dados){
-        Sala sala = salaRepository.getReferenceById(id);
-        sala.setNumero(dados.getNumero());
-        sala.setCapacidade(dados.getCapacidade());
-        sala.setSalaInativa(dados.isSalaInativa());
-    }
-    public void desativarSala(Long id, Sala dados) {
-        Sala sala = salaRepository.getReferenceById(id);
-        sala.setSalaInativa(true);
+    @Transactional
+    public void atualizarSala(AtualizarSalaDTO dto){
+        Sala sala = salaRepository.getReferenceById(dto.id());
+        sala.atualizarDados(dto);
     }
     // Deletar
     public void ExcluirSala(Long id){

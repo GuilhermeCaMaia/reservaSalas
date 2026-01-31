@@ -1,5 +1,8 @@
 package br.com.alura.reservaSalas.service;
 
+import br.com.alura.reservaSalas.dto.AtualizarUsuarioDTO;
+import br.com.alura.reservaSalas.dto.CadastrarUsuarioDTO;
+import br.com.alura.reservaSalas.dto.UsuarioDTO;
 import br.com.alura.reservaSalas.model.Usuario;
 import br.com.alura.reservaSalas.repository.UsuarioRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,27 +16,27 @@ public class UsuarioServece {
     @Autowired
     private UsuarioRepository usuarioRepository;
     // Criar
-    public void cadastrarUsuario(Usuario usuario) {
-        usuarioRepository.save(usuario);
+    public void cadastrarUsuario(CadastrarUsuarioDTO dto) {
+        usuarioRepository.save(new Usuario(dto));
     }
     // Listar
-    public List<Usuario> listarUsuarios() {
-        return usuarioRepository.findAll();
+    public List<UsuarioDTO> listarUsuarios() {
+        return usuarioRepository.findAll().stream()
+                .map(UsuarioDTO::new).toList();
     }
-    public Usuario buscarSalaPorId(Long id) {
-        Optional<Usuario> usuario = usuarioRepository.findById(id);
-        return usuario.orElse(null);
+    public UsuarioDTO buscarSalaPorId(Long id) {
+        Usuario usuario = usuarioRepository.findById(id)
+                .orElseThrow(()-> new RuntimeException("Usuario não encontrado"));
+        return new UsuarioDTO(
+                usuario.getId(),
+                usuario.getNome(),
+                usuario.getEmail()
+        );
     }
-//    public Usuario carregarUsuario(String emailUsuario) {
-//        Optional<Usuario> optional = usuarioRepository.findByEmail(emailUsuario);
-//        return optional.orElseThrow(null);
-//    }
     // Atualizar
-    public void atualizarUsuario(Long id, Usuario dados) {
-        Usuario usuario = usuarioRepository.getReferenceById(id);
-        usuario.setNome(dados.getNome());
-        usuario.setEmail(dados.getEmail());
-        usuarioRepository.save(usuario);
+    public void atualizarUsuario(AtualizarUsuarioDTO dto) {
+        Usuario usuario = usuarioRepository.getReferenceById(dto.id());
+        usuario.atualizarUsuario(dto);
     }
     // Deletar
     public void ExcluirUsuario(Long id) {

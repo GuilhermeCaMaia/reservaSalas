@@ -5,7 +5,7 @@ import org.antlr.v4.runtime.misc.NotNull;
 
 import java.time.LocalDate;
 
-public record CriarReservarDTO(
+public record CriarReservaDTO(
         @NotNull Long idSala,
         @NotNull Long idUsuario,
         @NotNull LocalDate dataInicio,

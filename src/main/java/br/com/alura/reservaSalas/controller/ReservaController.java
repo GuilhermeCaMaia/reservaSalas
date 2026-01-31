@@ -1,5 +1,8 @@
 package br.com.alura.reservaSalas.controller;
 
+import br.com.alura.reservaSalas.dto.CriarReservaDTO;
+import br.com.alura.reservaSalas.dto.ReservaDTO;
+import br.com.alura.reservaSalas.dto.SalaDTO;
 import br.com.alura.reservaSalas.model.Reserva;
 import br.com.alura.reservaSalas.model.Sala;
 import br.com.alura.reservaSalas.model.Usuario;
@@ -25,32 +28,28 @@ public class ReservaController {
     @Autowired
     private UsuarioServece usuarioServece;
 
-
+    // "/{idSala}/{emailUsuario}"
     // Criar
-    @PostMapping("/{idSala}/{emailUsuario}")
-    public ResponseEntity<String> ReservarSala(@PathVariable Long idSala,
-                                               @PathVariable String emailUsuario,
-                                               @RequestBody Reserva reserva){
-//        Sala sala = salaService.buscarSalaPorId(idSala);
-//        Usuario usuario = usuarioServece.carregarUsuario(emailUsuario);
-        reservaService.criarReserva(reserva, idSala, emailUsuario);
+    @PostMapping
+    public ResponseEntity<String> ReservarSala(@RequestBody CriarReservaDTO dto){
+        reservaService.criarReserva(dto);
         return ResponseEntity.ok("Reserva realizada com sucesso");
     }
     // Listar
     @GetMapping
-    public ResponseEntity<List<Reserva>> listarReservas(){
-        List<Reserva> reservas = reservaService.listarReservas();
-        return ResponseEntity.ok(reservas);
+    public ResponseEntity<List<ReservaDTO>> listarReservas(){
+        List<ReservaDTO> reservas = reservaService.listarReservas();
+        return ResponseEntity.ok().body(reservas);
     }
     @GetMapping("/{id}")
-    public ResponseEntity<Reserva> buscarReservaPorId(@PathVariable Long id){
-        var dados = reservaService.buscarReservaPorId(id);
-        return ResponseEntity.ok(dados);
+    public ResponseEntity<ReservaDTO> buscarReservaPorId(@PathVariable Long id){
+        ReservaDTO dto = reservaService.buscarReservaPorId(id);
+        return ResponseEntity.ok().body(dto);
     }
     // Atualizar
-    @PutMapping("/{id}")
-    public ResponseEntity<String> atualizarReserva(@PathVariable Long id, @RequestBody Reserva reserva){
-        reservaService.atualizarReserva(id, reserva);
+    @PutMapping
+    public ResponseEntity<String> atualizarReserva(@RequestBody ReservaDTO dto){
+        reservaService.atualizarReserva(dto);
         return ResponseEntity.ok("Reserva atualizada com sucesso");
     }
     // Deletar
