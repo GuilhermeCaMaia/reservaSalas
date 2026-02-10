@@ -4,7 +4,7 @@ import br.com.alura.reservaSalas.model.Reserva;
 import br.com.alura.reservaSalas.model.Sala;
 import br.com.alura.reservaSalas.model.StatusReserva;
 import br.com.alura.reservaSalas.model.Usuario;
-import org.antlr.v4.runtime.misc.NotNull;
+import jakarta.validation.constraints.NotNull;
 
 import java.time.LocalDate;
 

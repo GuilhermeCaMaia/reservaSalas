@@ -8,7 +8,9 @@ import java.util.Optional;
 public interface UsuarioRepository extends JpaRepository<Usuario, Long> {
     Optional<Usuario> findByNome(String nomeUsuario);
 
-    Optional<Usuario> findByEmail(String emailUsuario);
+    Boolean findByEmail(String emailUsuario);
+
+    boolean existsByEmail(String emailUsuario);
 
     // criar JPA para verificação de dados repetidos
 }

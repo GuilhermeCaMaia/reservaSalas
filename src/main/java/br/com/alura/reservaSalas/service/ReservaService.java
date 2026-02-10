@@ -1,5 +1,6 @@
 package br.com.alura.reservaSalas.service;
 
+import br.com.alura.reservaSalas.dto.AtualizarReservaDTO;
 import br.com.alura.reservaSalas.dto.CriarReservaDTO;
 import br.com.alura.reservaSalas.dto.ReservaDTO;
 import br.com.alura.reservaSalas.model.Reserva;
@@ -14,7 +15,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
-import java.util.Optional;
+import java.util.Objects;
 
 @Service
 public class ReservaService {
@@ -28,6 +29,7 @@ public class ReservaService {
 
     // Criar
     public void criarReserva(CriarReservaDTO dto){
+        Objects.requireNonNull(dto);
         Sala sala = salaRepository.findById(dto.idSala())
                 .orElseThrow(()-> new RuntimeException("Sala não encontrada"));
         Usuario usuario = usuarioRepository.findById(dto.idUsuario())
@@ -57,13 +59,17 @@ public class ReservaService {
     }
     // Atualizar
     @Transactional
-    public void atualizarReserva(ReservaDTO dto) {
+    public void atualizarReserva(AtualizarReservaDTO dto) {
         Reserva reserva = reservaRepository.getReferenceById(dto.id());
-        reserva.AtualizarReserva(dto);
+        reserva.atualizarReserva(dto);
+    }
+    public void cancelarReserva(Long id) {
+        Reserva reserva = reservaRepository.getReferenceById(id);
+        reserva.cancelarReserva();
     }
 
     // Deletar
-    public void ExcluirReserva(Long id) {
+    public void excluirReserva(Long id) {
         Reserva reserva = reservaRepository.findById(id)
                 .orElseThrow(()-> new EntityNotFoundException("Sala não encontrada"));
         reservaRepository.delete(reserva);

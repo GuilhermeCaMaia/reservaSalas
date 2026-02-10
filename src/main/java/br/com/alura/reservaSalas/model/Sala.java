@@ -16,7 +16,7 @@ public class Sala {
     private Long id;
 
     @NotNull
-    private String numero;
+    private String nome;
     @NotNull
     private Integer capacidade;
     @NotNull
@@ -30,9 +30,10 @@ public class Sala {
             System.out.println("Sala inativa!");
         }
         if (dto.capacidade() <= 0){
-            throw new IllegalArgumentException("Capacidade invalida! \n a capacidade deve ser positivo");
+            throw new IllegalArgumentException(
+                    "Capacidade invalida! \n a capacidade deve ser positivo");
         }
-        this.numero = dto.numero();
+        this.nome = dto.nome();
         this.capacidade = dto.capacidade();
         this.salaInativa = dto.salaInativa();
     }
@@ -42,11 +43,19 @@ public class Sala {
             System.out.println("Sala inativa!");
         }
         if (dto.capacidade() <= 0){
-            throw new IllegalArgumentException("Capacidade invalida! \n a capacidade deve ser positivo");
+            throw new IllegalArgumentException(
+                    "Capacidade invalida! \n a capacidade deve ser positivo");
         }
-        this.numero = dto.numero();
+        this.nome = dto.nome();
         this.capacidade = dto.capacidade();
         this.salaInativa = dto.salaInativa();
+    }
+
+    public void desativarSala(){
+        this.salaInativa = true;
+    }
+    public void ativarSala(){
+        this.salaInativa = false;
     }
 
     public Sala() {}
@@ -59,12 +68,12 @@ public class Sala {
         this.id = id;
     }
 
-    public String getNumero() {
-        return numero;
+    public String getNome() {
+        return nome;
     }
 
-    public void setNumero(String numero) {
-        this.numero = numero;
+    public void setNome(String nome) {
+        this.nome = nome;
     }
 
     public int getCapacidade() {

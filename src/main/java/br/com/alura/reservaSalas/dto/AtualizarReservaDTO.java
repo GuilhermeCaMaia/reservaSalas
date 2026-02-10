@@ -1,14 +1,16 @@
 package br.com.alura.reservaSalas.dto;
 
 import br.com.alura.reservaSalas.model.StatusReserva;
-import org.antlr.v4.runtime.misc.NotNull;
+import jakarta.validation.constraints.NotNull;
 
 import java.time.LocalDate;
 
 public record AtualizarReservaDTO(
         @NotNull Long id,
-        @NotNull LocalDate dataInicio,
-        @NotNull LocalDate dataFim,
+        @NotNull (message = "Insira a data de inicio")
+        LocalDate dataInicio,
+        @NotNull (message = "Insira a data de encerramento")
+        LocalDate dataFim,
         @NotNull StatusReserva status
         ) {
 }

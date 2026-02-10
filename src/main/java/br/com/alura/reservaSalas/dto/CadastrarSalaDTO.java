@@ -1,9 +1,11 @@
 package br.com.alura.reservaSalas.dto;
 
+import jakarta.validation.constraints.NotBlank;
 import org.antlr.v4.runtime.misc.NotNull;
 
 public record CadastrarSalaDTO(
-        @NotNull String numero,
+        @NotBlank (message = "O nome não pode estar em branco")
+        String nome,
         @NotNull Integer capacidade,
         @NotNull boolean salaInativa
 ) {

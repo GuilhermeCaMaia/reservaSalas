@@ -3,6 +3,7 @@ package br.com.alura.reservaSalas.model;
 import br.com.alura.reservaSalas.dto.AtualizarUsuarioDTO;
 import br.com.alura.reservaSalas.dto.CadastrarUsuarioDTO;
 import jakarta.persistence.*;
+import jakarta.validation.constraints.NotBlank;
 
 import java.util.List;
 
@@ -14,8 +15,10 @@ public class Usuario {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    @NotBlank
     private String nome;
 
+    @NotBlank
     private String email;
 
     @OneToMany(mappedBy = "usuario")
@@ -26,7 +29,7 @@ public class Usuario {
         this.email = dto.email();
     }
 
-    public void atualizarUsuario(AtualizarUsuarioDTO dto){
+    public void atualizarDados(AtualizarUsuarioDTO dto){
         this.nome = dto.nome();
         this.email = dto.email();
     }

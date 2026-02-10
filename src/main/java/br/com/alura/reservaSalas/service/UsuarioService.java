@@ -12,15 +12,14 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
-import java.util.Optional;
 
 @Service
-public class UsuarioServece {
+public class UsuarioService {
     @Autowired
     private UsuarioRepository usuarioRepository;
     // Criar
     public void cadastrarUsuario(CadastrarUsuarioDTO dto) {
-        boolean dadosCadastrados = usuarioRepository.findByEmail(dto.email());
+        boolean dadosCadastrados = usuarioRepository.existsByEmail(dto.email());
         if (dadosCadastrados) {
             throw new ValidacaoExcepetion("Dados ja cadastrados");
         }
@@ -44,14 +43,11 @@ public class UsuarioServece {
     @Transactional
     public void atualizarUsuario(AtualizarUsuarioDTO dto) {
         Usuario usuario = usuarioRepository.getReferenceById(dto.id());
-        boolean dadosCadastrados = usuarioRepository.findByEmail(dto.email());
-        if (dadosCadastrados) {
-            throw new ValidacaoExcepetion("Dados ja cadastrados");
-        }
-        usuario.atualizarUsuario(dto);
+
+        usuario.atualizarDados(dto);
     }
     // Deletar
-    public void ExcluirUsuario(Long id) {
+    public void excluirUsuario(Long id) {
         Usuario usuario = usuarioRepository.findById(id)
                 .orElseThrow(() -> new EntityNotFoundException("Usuario não encontrado"));
         usuarioRepository.delete(usuario);

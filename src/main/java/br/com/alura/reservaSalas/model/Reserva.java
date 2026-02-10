@@ -1,8 +1,9 @@
 package br.com.alura.reservaSalas.model;
 
+import br.com.alura.reservaSalas.dto.AtualizarReservaDTO;
 import br.com.alura.reservaSalas.dto.CriarReservaDTO;
-import br.com.alura.reservaSalas.dto.ReservaDTO;
 import jakarta.persistence.*;
+import jakarta.validation.constraints.NotNull;
 
 import java.time.LocalDate;
 
@@ -14,7 +15,9 @@ public class Reserva {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    @NotNull
     private LocalDate dataInicio;
+    @NotNull
     private LocalDate dataFim;
 
     @ManyToOne(fetch = FetchType.LAZY)
@@ -44,7 +47,7 @@ public class Reserva {
         this.usuario = usuario;
     }
 
-    public void AtualizarReserva(ReservaDTO dto){
+    public void atualizarReserva(AtualizarReservaDTO dto){
         if (dto.dataInicio() == null) {
             throw new IllegalArgumentException("informe a data de inicio");
         } else if (dto.dataFim() == null) {
@@ -56,6 +59,10 @@ public class Reserva {
         this.dataInicio = dto.dataInicio();
         this.dataFim = dto.dataFim();
         this.status = dto.status();
+    }
+
+    public void cancelarReserva() {
+        this.status = StatusReserva.CANCELADA;
     }
 
     public Reserva() {}
@@ -107,4 +114,5 @@ public class Reserva {
     public void setStatus(StatusReserva status) {
         this.status = status;
     }
+
 }

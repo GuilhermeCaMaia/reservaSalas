@@ -1,17 +1,19 @@
 package br.com.alura.reservaSalas.dto;
 
 import br.com.alura.reservaSalas.model.Sala;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
 
 public record SalaDTO(
-        Long id,
-        String numero,
-        Integer capacidade,
-        boolean salaInativa
+        @NotNull Long id,
+        @NotBlank String nome,
+        @NotNull Integer capacidade,
+        @NotNull boolean salaInativa
 ) {
     public SalaDTO(Sala sala){
         this(
                 sala.getId(),
-                sala.getNumero(),
+                sala.getNome(),
                 sala.getCapacidade(),
                 sala.isSalaInativa()
         );
