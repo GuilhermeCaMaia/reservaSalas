@@ -3,8 +3,10 @@ package br.com.alura.reservaSalas.controller;
 
 import br.com.alura.reservaSalas.model.Sala;
 import br.com.alura.reservaSalas.service.SalaService;
+import jakarta.persistence.EntityNotFoundException;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mock;
+import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.webmvc.test.autoconfigure.AutoConfigureMockMvc;
@@ -68,11 +70,6 @@ public class SalaControllerTest {
         assertEquals(200, response.getStatus());
     }
 
-//    @Test
-//    void deveriaRetornar400ParaListarSalasComErro() throws Exception {
-//
-//    }
-
     @Test
     void deveriaRetronar200ParaBuscarSalaPorIdComSucesso() throws Exception {
         Long idSala = 1L;
@@ -83,10 +80,13 @@ public class SalaControllerTest {
         assertEquals(200, response.getStatus());
     }
 
-//    @Test
-//    void deveriaRetornar400ParaBuscarSalaPorIdComErro() throws Exception {
-//
-//    }
+    @Test
+    void deveriaRetornar404ParaBuscarSalaPorIdComErro() throws Exception {
+        Long idInexistente = 99L;
+
+        Mockito.when(salaService.buscarSalaPorId(idInexistente))
+                .thenThrow(new EntityNotFoundException());
+    }
 
     @Test
     void deveriaRetornar200ParaAtualizarSalaComSucesso() throws Exception {

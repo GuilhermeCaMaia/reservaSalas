@@ -2,8 +2,10 @@ package br.com.alura.reservaSalas.controller;
 
 import br.com.alura.reservaSalas.model.Usuario;
 import br.com.alura.reservaSalas.service.UsuarioService;
+import jakarta.persistence.EntityNotFoundException;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mock;
+import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.webmvc.test.autoconfigure.AutoConfigureMockMvc;
@@ -68,6 +70,14 @@ public class UsuarioControllerTest {
                 get("/api/v1/usuario/{id}",idUsuario)
         ).andReturn().getResponse();
         assertEquals(200, response.getStatus());
+    }
+
+    @Test
+    void deveriaRetornar404ParaBuscarUsuarioPorIdComErro() throws Exception {
+        Long idInexistente = 99L;
+
+        Mockito.when(usuarioService.buscarSalaPorId(idInexistente))
+                .thenThrow(new EntityNotFoundException());
     }
 
     @Test
